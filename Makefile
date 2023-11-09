@@ -11,6 +11,8 @@ dev:
 	tmux send-keys "cd frontend; make dev" ENTER
 	tmux a -t $(ENV_NAME)
 
+setup: setup-backend setup-frontend
+
 setup-backend:
 	mkdir backend
 
