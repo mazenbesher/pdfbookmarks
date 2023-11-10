@@ -19,11 +19,15 @@ load_dotenv()
 
 app = FastAPI()
 
+print(
+        f"http://{os.environ.get('BACKEND_URL')}:{os.environ.get('BACKEND_PORT')}",
+        f"http://{os.environ.get('BACKEND_URL')}:{os.environ.get('VITE_PORT')}",)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        f"http://localhost:{os.environ.get('VITE_SERVER_PORT')}",
-        f"http://localhost:{os.environ.get('BACKEND_PORT')}",
+        f"http://{os.environ.get('BACKEND_URL')}:{os.environ.get('BACKEND_PORT')}",
+        f"http://{os.environ.get('BACKEND_URL')}:{os.environ.get('VITE_PORT')}",
     ],
     allow_credentials=True,
     allow_methods=["*"],

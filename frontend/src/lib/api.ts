@@ -1,7 +1,7 @@
 import type { HeaderConfig } from "./types";
 
 // globals
-const serverUrl: string = "http://localhost:9113"; // TODO: get port from .env
+const serverUrl: string = `http://${import.meta.env.BACKEND_URL}:${import.meta.env.BACKEND_PORT}`;
 
 // upload file to server and return the file id
 export const uploadFile = async (file: File): Promise<string> => {

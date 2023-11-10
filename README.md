@@ -1,6 +1,13 @@
 # Getting started
 
-Ensure you have `conda`, `tmux`, `make`, `git` and `bun` installed and then run:
+TODO
+
+# Development
+
+> **Warning**
+> Tested only on my local machine! Feel free to open an issue if you have any problems.
+
+Ensure you have `conda`, `tmux`, `make`, `git` and `bun` (or compatible cli tools) installed.
 
 ```bash
 git clone git@github.com:mazenbesher/pdfbookmarks.git
@@ -17,9 +24,10 @@ make setup dev
 
 # TODO
 
-- [ ] add status while downloading bookmarked pdf
+- [ ] add percentage status while downloading bookmarked pdf
 - [ ] limit max of page selector to the number of pages in the pdf
-- [ ] add option and preview for nested bookmarks
+- [ ] nested bookmarks support:
+    - [ ] add option and preview for nested bookmarks
 - [ ] save mapping to pdf file names to download file with original name + 'bookmarked'
 - [ ] add docker support
 - [ ] add tutorial
