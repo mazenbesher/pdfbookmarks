@@ -17,11 +17,20 @@
 </script>
 
 <main>
-  <Upload />
-  <HeaderConf />
-  <Output />
-  <Preview />
+  <div class="col1">
+    <Upload />
+    <HeaderConf />
+    <Output />
+  </div>
+  <div class="col2">
+    <Preview />
+  </div>
 </main>
 
 <style>
+  main {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+  }
 </style>

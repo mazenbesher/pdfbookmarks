@@ -4,10 +4,12 @@ TODO
 
 # Development
 
+## macOS
+
 > **Warning**
 > Tested only on my local machine! Feel free to open an issue if you have any problems.
 
-Ensure you have `conda`, `tmux`, `make`, `git` and `bun` (or compatible cli tools) installed.
+Ensure you have `conda`, `tmux`, `make`, `git`, `brew` and `bun` (or compatible cli tools) installed.
 
 ```bash
 git clone git@github.com:mazenbesher/pdfbookmarks.git
@@ -32,3 +34,4 @@ make setup dev
 - [ ] add docker support
 - [ ] add tutorial
 - [ ] support detecing multiline bookmark
+- [ ] show metadata of pdf file which may have different keys and values for different pdf files

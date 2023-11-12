@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { fileId, headerConfig } from "../stores";
+  import { fileId, headerConfig, pdfFileStatus } from "../stores";
   import * as api from "../lib/api";
 
   let downloading: boolean = false;
@@ -7,7 +7,10 @@
   const download = async () => {
     if (!$fileId) return;
     downloading = true;
-    await api.downloadFile($fileId, $headerConfig);
+
+    // start the bookmarking process and wait for it to finish
+    await api.downloadFile($fileId, $headerConfig, $pdfFileStatus.filename);
+
     downloading = false;
   };
 </script>

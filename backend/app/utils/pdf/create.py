@@ -3,40 +3,14 @@ import pdfplumber.page
 import pypdf
 from pypdf.generic import Fit
 
-import models
+from app.models import HeaderConfig
+from .headers import get_page_header_chars
 
 
-def get_header_chars(
-    pdf_page: pdfplumber.page.Page, header_config: models.HeaderConfig
-):
-    fonts = set([char["fontname"] for char in pdf_page.chars])
-    bold_fonts = set([font for font in fonts if "bold" in font.lower()])
-    header_chars = [
-        char
-        for char in pdf_page.chars
-        if (header_config.bold and char["fontname"] in bold_fonts)
-        and (header_config.min_font_size and char["size"] > header_config.min_font_size)
-    ]
-    return header_chars
-
-
-def show_headers(
-    pdf_file: pdfplumber.PDF, header_config: models.HeaderConfig, page_num: int = 0
-):
-    """
-    Extracts header based on the config and shows it on the page
-    """
-    page = pdf_file.pages[page_num]
-    header_chars = get_header_chars(page, header_config)
-    img = page.to_image()
-    img = img.draw_rects(header_chars)
-    return img
-
-
-def get_bookmarked_pdf(
+def bookmarked(
     iput_pdf_path: str,
     out_pdf_path: str,
-    header_config: models.HeaderConfig,
+    header_config: HeaderConfig,
 ):
     pdfplumber_file = pdfplumber.open(iput_pdf_path)
 
@@ -44,7 +18,7 @@ def get_bookmarked_pdf(
     merger.append(iput_pdf_path, import_outline=False)
 
     for page_num, pdf_page in enumerate(pdfplumber_file.pages):
-        header_chars = get_header_chars(pdf_page, header_config)
+        header_chars = get_page_header_chars(pdf_page, header_config)
         header_tops = set([char["y1"] for char in header_chars])
         header_chars_by_tops = {
             top: [char for char in header_chars if char["y1"] == top]

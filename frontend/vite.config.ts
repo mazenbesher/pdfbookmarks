@@ -14,7 +14,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
     ],
     // pass env variables to client
     define: {
-      'import.meta.env.BACKEND_URL': JSON.stringify(env.BACKEND_URL),
+      'import.meta.env.BACKEND_HOST': JSON.stringify(env.BACKEND_HOST),
       'import.meta.env.BACKEND_PORT': JSON.stringify(env.BACKEND_PORT),
     }
   };

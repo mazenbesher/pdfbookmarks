@@ -1,7 +1,9 @@
-import type { HeaderConfig } from "./types";
+import type { HeaderConfig, PDFFileStatus } from "./types";
 
 // globals
-const serverUrl: string = `http://${import.meta.env.BACKEND_URL}:${import.meta.env.BACKEND_PORT}`;
+const serverUrl: string = `http://${import.meta.env.BACKEND_HOST}:${
+  import.meta.env.BACKEND_PORT
+}`;
 
 // upload file to server and return the file id
 export const uploadFile = async (file: File): Promise<string> => {
@@ -23,7 +25,7 @@ export const getHeaderPreview = async (
   headerConfig: HeaderConfig
 ): Promise<string> => {
   // post input file to api and get the image
-  const response = await fetch(`${serverUrl}/api/pdf/preview/headers`, {
+  const response = await fetch(`${serverUrl}/api/pdf/page/preview`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -41,7 +43,11 @@ export const getHeaderPreview = async (
   return URL.createObjectURL(imageBlob);
 };
 
-export const downloadFile = async (fileId: string, headerConfig: HeaderConfig) => {
+export const downloadFile = async (
+  fileId: string,
+  headerConfig: HeaderConfig,
+  filename: string
+) => {
   const response = await fetch(`${serverUrl}/api/pdf/download/bookmarked`, {
     method: "POST",
     headers: {
@@ -59,7 +65,20 @@ export const downloadFile = async (fileId: string, headerConfig: HeaderConfig) =
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "bookmarked.pdf";
+  a.download = filename.replace(".pdf", "_bookmarked.pdf");
   a.click();
   URL.revokeObjectURL(url);
+};
+
+export const getFileStatus = async (fileId: string): Promise<PDFFileStatus> => {
+  const response = await fetch(`${serverUrl}/api/pdf/status/${fileId}`);
+  const status = await response.json();
+  return {
+    filename: status["filename"],
+    nPages: status["n_pages"],
+    size: status["size"],
+    lastAccessed: status["last_accessed"],
+    lastModified: status["last_modified"],
+    creationTime: status["creation_time"],
+  };
 };
