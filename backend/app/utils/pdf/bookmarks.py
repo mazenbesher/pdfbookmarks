@@ -4,12 +4,15 @@ import pypdf
 from pypdf.generic import Fit
 
 from app.models import HeaderConfig
+from app.celery import celery_app
+from app.types import T_PathLike
 from .headers import get_page_header_chars
 
 
-def bookmarked(
-    iput_pdf_path: str,
-    out_pdf_path: str,
+@celery_app.task
+def create(
+    iput_pdf_path: T_PathLike,
+    out_pdf_path: T_PathLike,
     header_config: HeaderConfig,
 ):
     pdfplumber_file = pdfplumber.open(iput_pdf_path)

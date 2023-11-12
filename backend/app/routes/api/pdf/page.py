@@ -12,6 +12,7 @@ import app.utils.pdf.headers
 
 router = APIRouter(
     prefix="/page",
+    tags=["page"],
 )
 
 

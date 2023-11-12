@@ -2,37 +2,54 @@
   import { fileId, headerConfig, pdfFileStatus } from "../stores";
   import * as api from "../lib/api";
 
-  let downloading: boolean = false;
+  let creatingBookmarks = false;
+  let bookmarkedFileReady = false;
 
-  const download = async () => {
+  const createBookmarks = async () => {
     if (!$fileId) return;
-    downloading = true;
+    creatingBookmarks = true;
+    await api.createBookmarks($fileId, $headerConfig, $pdfFileStatus.filename);
 
-    // start the bookmarking process and wait for it to finish
-    await api.downloadFile($fileId, $headerConfig, $pdfFileStatus.filename);
-
-    downloading = false;
+    // create a timer to check status every second
+    const timer = setInterval(async () => {
+      const ready = await api.getBookmarksStatus($fileId);
+      if (ready) {
+        clearInterval(timer);
+        creatingBookmarks = false;
+        bookmarkedFileReady = true;
+      }
+    }, 1000);
   };
 </script>
 
 <main>
   <h2>Output</h2>
 
-  <!-- Show download button if downloading otherwise show processing message -->
-  {#if downloading}
-    <p>Processing...</p>
-  {:else if $fileId && $fileId.length > 0}
-    <!-- Download button -->
+  <!-- Create bookmarks button -->
+  {#if $fileId && $fileId.length > 0}
     <button
       type="button"
-      id="download"
-      name="download"
-      disabled={!$fileId || $fileId.length === 0 || downloading}
-      on:click={download}
+      id="createBookmakrs"
+      name="createBookmakrs"
+      disabled={!$fileId || $fileId.length === 0 || creatingBookmarks}
+      on:click={createBookmarks}
     >
-      Download
+      Create Bookmarks
     </button>
-  {:else}
-    <p>Upload a file to get started</p>
+  {/if}
+
+  <!-- Download file button -->
+  {#if $fileId && $fileId.length > 0 && bookmarkedFileReady}
+    <button
+      type="button"
+      id="downloadFile"
+      name="downloadFile"
+      disabled={!$fileId || $fileId.length === 0 || creatingBookmarks}
+      on:click={async () => {
+        await api.downloadBookmarkedFile($fileId, $pdfFileStatus.filename);
+      }}
+    >
+      Download File
+    </button>
   {/if}
 </main>

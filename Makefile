@@ -7,20 +7,17 @@ dev-tmux:
 	@echo "Create tmux session with name $(ENV_NAME)"
 	tmux new -d -s $(ENV_NAME)
 
-	@echo "Enable pane titles in tmux"
-	tmux set -t $(ENV_NAME) pane-border-status top
-	
-	@echo "Creat a new window with name backend and run 'cd backend; make dev-tmux' in it"
-	tmux rename-window -t $(ENV_NAME) "backend"
-	tmux select-pane -t $(ENV_NAME):backend -T "backend"
-	tmux send-keys -t $(ENV_NAME):backend "cd backend; make dev-tmux" ENTER
-	
-	@echo "Creat a new window with name frontend and run 'cd frontend; make dev-tmux' in it"
-	tmux new-window -t $(ENV_NAME) -n "frontend"
-	tmux select-pane -t $(ENV_NAME):frontend -T "frontend"
+	@echo "Rename current window to frontend and run 'cd frontend; make dev-tmux' in it"
+	tmux rename-window -t $(ENV_NAME) "frontend"
 	tmux send-keys -t $(ENV_NAME):frontend "cd frontend; make dev-tmux" ENTER
 	
+	@echo "Creat a new window with name backend and run 'cd backend; make dev-tmux' in it"
+	tmux new-window -t $(ENV_NAME) -n "backend"
+	tmux send-keys -t $(ENV_NAME):backend "cd backend; make dev-tmux" ENTER
+	
 	tmux a -t $(ENV_NAME)
+
+dev: dev-tmux
 
 setup: setup-backend setup-frontend
 
@@ -37,6 +34,7 @@ setup-backend:
 	$(CONDA_ACTIVATE); pip install "ruff==0.1.4"
 	$(CONDA_ACTIVATE); pip install "python-dotenv==1.0.0"
 	$(CONDA_ACTIVATE); pip install "redis==5.0.1"
+	$(CONDA_ACTIVATE); pip install "celery==5.3.5"
 
 	@echo "Install other dependencies"
 	brew install redis@7.2

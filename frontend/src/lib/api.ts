@@ -43,12 +43,13 @@ export const getHeaderPreview = async (
   return URL.createObjectURL(imageBlob);
 };
 
-export const downloadFile = async (
+export const createBookmarks = async (
   fileId: string,
   headerConfig: HeaderConfig,
   filename: string
 ) => {
-  const response = await fetch(`${serverUrl}/api/pdf/download/bookmarked`, {
+  // start a task to create bookmarks
+  const response = await fetch(`${serverUrl}/api/pdf/bookmarks/create`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -61,6 +62,27 @@ export const downloadFile = async (
       },
     }),
   });
+  const responseMessage = await response.json();
+  // TODO: do something with responseMessage
+  return;
+};
+
+export const getBookmarksStatus = async (fileId: string): Promise<boolean> => {
+  const response = await fetch(
+    `${serverUrl}/api/pdf/bookmarks/status/${fileId}`
+  );
+  const responseMessage = await response.json();
+  if (responseMessage["error"]) {
+    console.log(responseMessage);
+    return false;
+  }
+  return responseMessage["ready"];
+};
+
+export const downloadBookmarkedFile = async (fileId: string, filename: string) => {
+  const response = await fetch(
+    `${serverUrl}/api/pdf/bookmarks/get/${fileId}`
+  );
   const blob = await response.blob();
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -68,7 +90,7 @@ export const downloadFile = async (
   a.download = filename.replace(".pdf", "_bookmarked.pdf");
   a.click();
   URL.revokeObjectURL(url);
-};
+}
 
 export const getFileStatus = async (fileId: string): Promise<PDFFileStatus> => {
   const response = await fetch(`${serverUrl}/api/pdf/status/${fileId}`);

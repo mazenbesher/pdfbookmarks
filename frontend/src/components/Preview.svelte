@@ -1,6 +1,6 @@
 <script lang="ts">
   import * as api from "../lib/api";
-  import { headerConfig, fileId } from "../stores";
+  import { headerConfig, fileId, pdfFileStatus } from "../stores";
 
   // state
   let loading: boolean = false;
@@ -60,7 +60,7 @@
       type="button"
       id="previewPrev"
       name="previewPrev"
-      disabled={!$fileId || $fileId.length === 0}
+      disabled={!$fileId || $fileId.length === 0 || pageToPreview === 1}
       on:click={() => {
         pageToPreview--;
         preview();
@@ -74,7 +74,7 @@
       type="button"
       id="previewNext"
       name="previewNext"
-      disabled={!$fileId || $fileId.length === 0}
+      disabled={!$fileId || $fileId.length === 0 || pageToPreview === $pdfFileStatus.nPages}
       on:click={() => {
         pageToPreview++;
         preview();

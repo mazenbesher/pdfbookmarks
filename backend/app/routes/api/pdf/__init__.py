@@ -8,14 +8,14 @@ from app.utils.pdf import get_file_path_from_id
 from app.utils import db
 
 from .page import router as page_router
-from .download import router as download_router
+from .bookmarks import router as bookmarks_router
 
 router = APIRouter(
     prefix="/pdf",
     tags=["pdf"],
 )
 router.include_router(page_router)
-router.include_router(download_router)
+router.include_router(bookmarks_router)
 
 
 @router.post("/upload")
